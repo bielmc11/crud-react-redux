@@ -58,10 +58,11 @@ export const usersSlice = createSlice({
 			3-) SI HA HABIDO UN ERROR HAGO UN ROLLBACK PARA DESACTUALIZAR LA UI 
 		*/
 		rollBackUser: (state, action: PayloadAction<userWithId>) => {
-			const myUser = state.find((user: userWithId )=> user.id === action.payload.id)
-			//FALTA POR HACER
-			//creo que aqui lo devuelvo pero mejor vovlerme a ver esa parte del video
-			return [state]
+			const isUserAlreadyDefined = state.find((user: userWithId )=> user.id === action.payload.id) //Me aseguro de que no este
+			if(!isUserAlreadyDefined){
+				return [...state, action.payload]
+			}
+			
 		}
 	},
 });

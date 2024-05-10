@@ -35,22 +35,23 @@ const syncWithDatabase: Middleware = (store) => (next) => (action : any) => {
 	next(action);
 
 	if(type === 'users/deleteUserbYId'){
-		const userIdToRemove  = payload //Usuario que quiero eliminar
-		const userToRemove = previousState.users.find((user: userWithId ) => user.id === userIdToRemove .id) //Busco si estaba en la lista anterior
+		const userIdToRemove  = payload //El id del usuario a eliminar
+		const userToRemove = previousState.users.find((user: userWithId ) => user.id === userIdToRemove) //Busco si estaba en la lista anterior
+		console.log('El usuario a aliminar es',userToRemove)
 			fetch(`https://jsonplaceholder.typicode.com/users/${userIdToRemove}`,{method : 'DELETE'}) //Aqui lo elimino EN LA bd
 				.then(res => {
 					if(res.ok){
-						console.log('peeerf')
 						toast.success('Usuario eliminado correctamente');
 						return
 					}
 					throw new Error('Error al eliminar el usuario')
 					
 				})
-				.catch(error => { //Si no se ha podido eliminar
-					console.log('Error de la hostia al eliminar el usuario crack')
+				.catch(error => { //Si no he podido eliminar al usuario de la BD tengo que devolverlo a la lista de la UI
+					toast.error('El usuario no se ha podido eliminar')
 					if(userToRemove){
-						store.dispatch(rollBackUser(userToRemove)) //Si el user estaba anteriormente llamo al rollback
+						console.log('entreeeee')
+						store.dispatch(rollBackUser(userToRemove)) //Llamo al metodo rollBack para devolver al usuario
 					}
 				})
 	}
